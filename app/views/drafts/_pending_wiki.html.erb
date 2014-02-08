@@ -1,0 +1,9 @@
+<%= l(:label_draft_pending_w,
+      {:time => distance_of_time_in_words(Time.now, draft.updated_at),
+       :restore => link_to(l(:label_draft_restore),
+                           restore_draft_path(draft, :id => @page.title, :project_id => @project.id), 
+                           :method => :put),
+       :delete  => link_to(l(:label_draft_delete), draft_path(draft),
+                           :method => :delete, :remote => true)
+      }
+    ).html_safe %>

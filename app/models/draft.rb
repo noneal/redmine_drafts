@@ -13,6 +13,7 @@ class Draft < ActiveRecord::Base
       hsh["issue"] ||= {}
       hsh["notes"] = hsh["issue"]["notes"] if hsh["notes"].blank?
       hsh["issue"]["notes"] = hsh["notes"] if hsh["issue"]["notes"].blank?
+      hsh["wiki"] ||= {}
     end
     hsh
   end
@@ -24,4 +25,14 @@ class Draft < ActiveRecord::Base
   def self.find_or_create_for_issue(conditions)
     find_for_issue(conditions) || create(conditions.merge(:element_type => "Issue"))
   end
+
+
+  def self.find_for_wiki(conditions)
+    where(conditions.merge(:element_type => "Wiki")).last
+  end
+
+  def self.find_or_create_for_wiki(conditions)
+    find_for_wiki(conditions) || create(conditions.merge(:element_type => "Wiki"))
+  end
+
 end

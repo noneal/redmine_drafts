@@ -1,0 +1,34 @@
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'drafts', :plugin => :redmine_drafts %>
+<% end %>
+
+<% if User.current.logged? && @page%>
+<script>
+$(function() {
+  //ensure draft status div is at the bottom of the fieldset
+  $("#draft-status").appendTo($(".box.tabular"))
+  //observe changed on the form
+  $("#wiki_form").observe(60, function() {
+    $.ajax({
+      url: "<%= autosave_drafts_path(:wiki_id => @page.id) %>",
+      dataType: "script",
+      type: "PUT",
+      data: $(this).serialize(),
+      global: false //no 'loading...' tooltip
+    })
+  })
+})
+</script>
+<% end %>
+
+<% if User.current.logged? && @page && params[:content].nil? %>
+<div id="draft-status" style="padding:5px; color:#900; text-align:center;">
+  <% draft = Draft.find_for_wiki(:element_id => @page.id, :user_id => User.current) %>
+  <% if draft %>
+    <div id="draft-pending" style="padding:5px; color:#900; text-align:center;">
+      <% draft %></p>
+      <%= render :partial => 'drafts/pending_wiki', :locals => { :draft => draft } %>
+    </div>
+  <% end %>
+</div>
+<% end %>
