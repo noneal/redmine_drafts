@@ -3,7 +3,7 @@ require_dependency 'wiki_controller'
 class WikiController
   prepend_before_filter :set_draft
   prepend_before_filter :find_existing_or_new_page, :only => [:show, :edit, :update]
-  after_filter :clean_drafts_after_save, :only => [:update]
+  after_filter :clean_drafts_after_save, :only => [:update, :destroy]
   
   def clean_drafts_after_save
     draft = Draft.find_for_wiki(:element_id => @page.id, :user_id => User.current.id)
